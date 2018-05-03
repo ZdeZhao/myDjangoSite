@@ -38,10 +38,33 @@ class Account(models.Model):
 
 
 class Contact(models.Model):
-    account = models.ForeignKey("Account", on_delete=models.CASCADE)
+    accounts = models.ManyToManyField("Account")
     zip_code = models.CharField(max_length=10)
     address = models.CharField(max_length=80)
     mobile = models.CharField(max_length=20)
 
     def __str__(self):
         return "%s, %s" % (self.account.user_name, self.mobile)
+
+
+class MessageBase(models.Model):
+    content = models.CharField(max_length=100)
+    user_name = models.CharField(max_length=80)
+    pub_date = models.DateField(auto_now_add=True)
+
+
+
+class Moments(MessageBase):
+    headline = models.CharField(max_length=50)
+
+
+LEVELS = (
+    ('1', 'Very good'),
+    ('2', 'Good'),
+    ('3', 'Bad'),
+)
+
+
+class Comments(MessageBase):
+    level = models.CharField(max_length=1, choices=LEVELS)
+
